@@ -1,32 +1,33 @@
 "use client";
 
 import * as z from "zod";
-import { useState } from "react";
 import axios from "axios";
-import { MessageSquare } from "lucide-react"
-import { zodResolver } from "@hookform/resolvers/zod";
+import { MessageSquare } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
+import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { ChatCompletionRequestMessage } from "openai";
-import { toast } from "react-hot-toast";
 
-import { Heading } from "@/components/heading"
-import { formSchema } from "./constants";
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { BotAvatar } from "@/components/bot-avatar";
+import { Heading } from "@/components/heading";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
-import { Empty } from "@/components/empty";
 import { Loader } from "@/components/loader";
 import { UserAvatar } from "@/components/user-avatar";
-import { BotAvatar } from "@/components/bot-avatar";
+import { Empty } from "@/components/empty";
 import { useProModal } from "@/hooks/use-pro-modal";
 
-const conversationPage = () => {
-  const router = useRouter()
-  const proModal = useProModal();
+import { formSchema } from "./constants";
 
+const ConversationPage = () => {
+  const router = useRouter();
+  const proModal = useProModal();
   const [messages, setMessages] = useState<ChatCompletionRequestMessage[]>([]);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -35,8 +36,8 @@ const conversationPage = () => {
   });
 
   // instead of useState for loading we use isloading from react-hook-form
-  const isLoading = form.formState.isSubmitting
-
+  const isLoading = form.formState.isSubmitting;
+  
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const userMessage: ChatCompletionRequestMessage = { role: "user", content: values.prompt };
@@ -57,9 +58,9 @@ const conversationPage = () => {
     }
   }
 
-  return (
+  return ( 
     <div>
-       <Heading
+      <Heading
         title="Conversation"
         description="Our most advanced conversation model."
         icon={MessageSquare}
@@ -68,7 +69,7 @@ const conversationPage = () => {
       />
       <div className="px-4 lg:px-8">
         <div>
-         <Form {...form}>
+          <Form {...form}>
             <form 
               onSubmit={form.handleSubmit(onSubmit)} 
               className="
@@ -123,7 +124,7 @@ const conversationPage = () => {
                   message.role === "user" ? "bg-white border border-black/10" : "bg-muted",
                 )}
               >
-                {message.role === "user" ? <UserAvatar/> : <BotAvatar />}
+                {message.role === "user" ? <UserAvatar /> : <BotAvatar />}
                 <p className="text-sm">
                   {message.content}
                 </p>
@@ -133,7 +134,7 @@ const conversationPage = () => {
         </div>
       </div>
     </div>
-  )
+   );
 }
-
-export default conversationPage
+ 
+export default ConversationPage;
