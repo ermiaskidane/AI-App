@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { ChatCompletionRequestMessage } from "openai";
+import { toast } from "react-hot-toast";
 
 import { Heading } from "@/components/heading"
 import { formSchema } from "./constants";
@@ -49,8 +50,7 @@ const conversationPage = () => {
       if (error?.response?.status === 403) {
         proModal.onOpen();
       } else {
-        console.log(error);
-        // toast.error("Something went wrong.");
+        toast.error("Something went wrong.");
       }
     } finally {
       router.refresh();
